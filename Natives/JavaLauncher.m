@@ -112,6 +112,7 @@ int launchJVM(NSString *username, id launchTarget, int width, int height, int mi
     init_loadCustomEnv();
 
     NSString *librariesPath = [NSString stringWithFormat:@"%s/libs", getenv("BUNDLE_PATH")];
+    NSString *librariesPath2 = [NSString stringWithFormat:@"%s/instances/default/libraries/lunar", getenv("POJAV_HOME")];
 
     NSLog(@"[JavaLauncher] Beginning JVM launch");
 
@@ -268,7 +269,13 @@ int launchJVM(NSString *username, id launchTarget, int width, int height, int mi
     NSLog(@"[Init] Found JLI lib");
 
     margv[++margc] = "-cp";
+    NSString *YESpath = [NSString stringWithFormat:@"%s/DO_LUNAR.txt", getenv("POJAV_HOME")];
+    NSString *YEScontent = [NSString stringWithContentsOfFile:YESpath encoding:NSUTF8StringEncoding error:nil];
+    if ([YEScontent isEqualToString:@"YES"]) {
+    margv[++margc] = [NSString stringWithFormat:@"%@/*:%@/*", librariesPath, librariesPath2].UTF8String;
+    } else {
     margv[++margc] = [NSString stringWithFormat:@"%@/*", librariesPath].UTF8String;
+    }
     margv[++margc] = "net.kdt.pojavlaunch.PojavLauncher";
 
     if (username == nil) {
