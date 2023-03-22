@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "SurfaceViewController.h"
+#import "ios_uikit_bridge.h"
 #import "utils.h"
 
 #include <dlfcn.h>

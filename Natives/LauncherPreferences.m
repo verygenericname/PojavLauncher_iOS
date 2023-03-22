@@ -140,10 +140,12 @@ void loadPreferences(BOOL reset) {
     setDefaultValueForPref(prefDict, @"appicon", @"AppIcon-Light");
     setDefaultValueForPref(prefDict, @"debug_logging", @(CONFIG_RELEASE != 1));
     setDefaultValueForPref(prefDict, @"cosmetica", @YES);
+    setDefaultValueForPref(prefDict, @"controller_type", @"xbox");
     setDefaultValueForPref(envPrefDict, @"java_home", @"java-8-openjdk");
     setDefaultValueForPref(envPrefDict, @"renderer", @"auto");
     setDefaultValueForPref(envPrefDict, @"fullscreen_airplay", @YES);
     setDefaultValueForPref(envPrefDict, @"hardware_hide", @NO);
+    setDefaultValueForPref(prefDict, @"slimmed", @NO);
     fillDefaultWarningDict();
     setDefaultValueForPref(prefDict, @"force_unsupported_launch", @NO);
     setDefaultValueForPref(prefDict, @"slideable_hotbar", @NO);
@@ -168,6 +170,14 @@ void loadPreferences(BOOL reset) {
     prefDict[@"debugs"] = debugPrefDict;
     prefDict[@"env_vars"] = envPrefDict;
     prefDict[@"warnings"] = warnPrefDict;
+    
+    NSString *ipajre = [NSString stringWithFormat:@"%s/jvm/java-17-openjdk", getenv("BUNDLE_PATH")];
+    NSString *sysjre = @"/usr/lib/jvm/java-17-openjdk";
+    if ((![fileManager fileExistsAtPath:ipajre]) && (![fileManager fileExistsAtPath:sysjre])) {
+        setPreference(@"slimmed", @YES);
+    } else {
+        setPreference(@"slimmed", @NO);
+    }
 
     [prefDict writeToFile:prefPath atomically:YES];
 }
